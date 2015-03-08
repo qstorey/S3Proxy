@@ -6,16 +6,20 @@ import (
     "os"
 )
 
-// Constants
-const tmp_path string = "/tmp/s3http/"
+var options S3Proxy.Options
 
 func configure() {
-    os.Mkdir(tmp_path, 0700)
+    os.Mkdir(options.CacheDir, 0700)
 }
 
 func main() {
+    // Load the default options
+    options.LoadDefaultOptions()
+    // Run the startup configuration
+    configure()
+    // Set up the routing
     mux := S3Proxy.SetUpRoutes()
     http.Handle("/", mux)
+    // Start the HTTP server
     http.ListenAndServe(":8080", nil)
-
 }
