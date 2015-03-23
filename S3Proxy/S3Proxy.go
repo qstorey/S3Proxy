@@ -6,16 +6,17 @@ import (
     "os"
 )
 
-func configure(options *S3Proxy.Options) {
-    os.Mkdir(options.CacheDir, 0700)
+func configure() {
+    os.Mkdir(S3Proxy.Options.CacheDir, 0700)
 }
 
 func main() {
-    options := new(S3Proxy.Options)
     // Load the default options
-    options.LoadDefaultOptions()
+    S3Proxy.LoadDefaultOptions()
     // Run the startup configuration
-    configure(options)
+    configure()
+    // Connect to S3
+    S3Proxy.S3Connect()
     // Set up the routing
     mux := S3Proxy.SetUpRoutes()
     http.Handle("/", mux)

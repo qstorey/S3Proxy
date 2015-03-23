@@ -24,11 +24,13 @@ func StatusHandler(w http.ResponseWriter, req *http.Request) {
 
 // The default handler used for everything else
 func DefaultHandler(w http.ResponseWriter, req *http.Request) {
-    filename := tmp_path + req.URL.Path[1:]
+    // Check if the key is still valid on S3
+
+    filename := Options.CacheDir + req.URL.Path[1:]
     // If we don't have the file on disk, we need to download it
     if _, err := os.Stat(filename); os.IsNotExist(err) {
         LogInfo("File isn't on disk so download it\n")
-        S3download(req.URL.Path)
+        // S3download(req.URL.Path)
     }
     http.ServeFile(w, req, filename)
 }

@@ -6,7 +6,7 @@ An http proxy to S3 private buckets.
 Table of contents
 =================
 
-- [S3Proxy](#s3proxy  )
+- [S3Proxy](#s3proxy)
 - [Table of contents](#table-of-contents)
 - [Development](#development)
 

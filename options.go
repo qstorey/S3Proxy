@@ -1,9 +1,11 @@
 package S3Proxy
 
-type Options struct {
+type options struct {
     CacheDir    string
 }
 
-func (opt *Options) LoadDefaultOptions() {
-    opt.CacheDir = "/tmp/S3Proxy"
+var Options = options{}
+
+func LoadDefaultOptions() {
+    Options.CacheDir = "/tmp/S3Proxy/"
 }
