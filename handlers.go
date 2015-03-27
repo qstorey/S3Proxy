@@ -1,19 +1,15 @@
 package S3Proxy
 
 import (
-    "encoding/json"
+    "github.com/drone/routes"
     "net/http"
 )
 
 // The index handler
 func IndexHandler(w http.ResponseWriter, req *http.Request) {
     msgDict := map[string]string{"Name": "S3Proxy", "Description": "An AWS S3 proxy server"}
-    msgJson, err := json.Marshal(msgDict)
-    if err != nil {
-        LogFatal(err)
-    }
-    w.Header().Set("Content-Type", "application/json")
-    w.Write(msgJson)
+    routes.ServeJson(w, &msgDict)
+    return
 }
 
 // The status handler for determining the status of the server
@@ -28,12 +24,7 @@ func DefaultHandler(w http.ResponseWriter, req *http.Request) {
         http.Error(w, "404: Not Found", 404)
         return
     }
-    resp, err := json.Marshal(keyMap)
-    if err != nil {
-        LogFatal(err)
-    }
-    w.Header().Set("Content-Type", "application/json")
-    w.Write(resp)
+    routes.ServeJson(w, &keyMap)
     return
     // // Check if the key is still valid on S3
 
