@@ -21,5 +21,5 @@ func main() {
     mux := S3Proxy.SetUpRoutes()
     http.Handle("/", mux)
     // Start the HTTP serer
-    http.ListenAndServe(":8080", nil)
+    http.ListenAndServe(S3Proxy.Options.BindAddress, nil)
 }

@@ -8,7 +8,7 @@ func SetUpRoutes() *routes.RouteMux {
     // Route: Index
     mux.Get("/", IndexHandler)
     // Route: Status
-    mux.Get("/status", StatusHandler)
+    mux.Get("/_status", StatusHandler)
     // Route: Default
     mux.Get("/.*", DefaultHandler)
 
