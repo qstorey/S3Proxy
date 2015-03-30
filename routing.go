@@ -11,6 +11,5 @@ func SetUpRoutes() *routes.RouteMux {
     mux.Get("/_status", StatusHandler)
     // Route: Default
     mux.Get("/.*", DefaultHandler)
-
     return mux
 }
