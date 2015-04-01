@@ -1,31 +1,35 @@
-S3Proxy
-=========
+# S3Proxy
 
-An http proxy to S3 private buckets.
+> WARNING: I created this repo for the intention of learning Go, use with caution.
 
-Table of contents
-=================
+
+S3Proxy is an http proxy to AWS S3 private buckets written in Go.
+
+Using your AWS API credentials, S3Proxy allows you to make unauthenticated HTTP requests to download objects from your private S3 bucket.
+
+This makes it easy for tools like curl to access private buckets:
+
+```bash
+curl http://localhost:9090/object/key
+```
+
+> WARNING: It's probably never a good idea to run this on a publicly accessible network/server, but rather private/local networks.
+
+# Table of contents
 
 - [S3Proxy](#s3proxy)
 - [Table of contents](#table-of-contents)
 - [Development](#development)
+- [Usage](#usage)
 
-Development
-===========
+# Development
 
-All the packages can be found in the root of the repo with its own Makefile to
-build the packages.
+If you want to contribute to S3Proxy, clone this repo and run the ```make```
 
-The executable can be found in the S3Proxy directory. Running the Makefile in
-this directory will produce an S3Proxy executable.
-
-<pre>
-./S3Proxy
-+ S3Proxy
-  |-- Makefile
-  |-- S3Proxy.go
-|-- handlers.go
-|-- Makefile
-|-- options.go
-....
-</pre>
+# Usage
+```bash
+export AWS_ACCESS_KEY=<your access key>
+export AWS_SECRET_KEY=<you secret key>
+export AWS_BUCKET=<the bucket you want to access>
+./S3Proxy/S3Proxy
+```
