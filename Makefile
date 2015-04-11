@@ -4,5 +4,5 @@ default: build
 
 build:
 	go get -v
-	go build -v
-	cd S3Proxy && go install -v
+	cd S3Proxy && go build -v
+	go build -v -o bin/S3Proxy
