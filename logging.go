@@ -4,10 +4,10 @@ import "log"
 
 // Logging
 func LogInfo(s string) {
-    log.Print(s)
+	log.Print(s)
 }
 
 func LogFatal(e error) {
-    log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
-    log.Fatal(e)
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+	log.Fatal(e)
 }

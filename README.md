@@ -24,6 +24,7 @@ curl http://localhost:9090/object/key
 
 # Development
 
+Setup your development environment, see https://golang.org/doc/code.html. 
 If you want to contribute to S3Proxy, clone this repo and run the ```make```
 
 # Usage
@@ -31,5 +32,6 @@ If you want to contribute to S3Proxy, clone this repo and run the ```make```
 export AWS_ACCESS_KEY=<your access key>
 export AWS_SECRET_KEY=<you secret key>
 export AWS_BUCKET=<the bucket you want to access>
-./S3Proxy/S3Proxy
+
+$GOPATH/bin/S3Proxy
 ```
