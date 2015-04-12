@@ -1,11 +1,19 @@
-.PHONY: default build server
+.PHONY: default build vet fmt
+
+build: vet fmt
+	go get -v
+	cd S3Proxy && go build -v
+	go build -v -o bin/S3Proxy
 
 default: build
 
-build:
-	go get -v
-	go build -v
-	cd S3Proxy && go install -v
+fmt:
+	go fmt .
+	cd S3Proxy && go fmt .
 
-server: build
-	${GOPATH}/bin/S3Proxy
+install: build
+	go install -v
+
+vet:
+	go vet .
+	cd S3Proxy && go vet .

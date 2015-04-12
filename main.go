@@ -1,20 +1,15 @@
 package main
 
 import (
-	"github.com/qstorey/S3Proxy"
+	"github.com/qstorey/S3Proxy/S3Proxy"
 	"net/http"
-	"os"
 )
-
-func configure() {
-	os.Mkdir(S3Proxy.Options.CacheDir, 0700)
-}
 
 func main() {
 	// Load the default options
 	S3Proxy.LoadDefaultOptions()
 	// Run the startup configuration
-	configure()
+	S3Proxy.Configure()
 	// Connect to S3
 	//S3Proxy.S3Connect()
 	// Set up the routing
