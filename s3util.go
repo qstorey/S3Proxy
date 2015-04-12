@@ -1,61 +1,62 @@
 package S3Proxy
 
 import (
-	"github.com/mitchellh/goamz/aws"
-	"github.com/mitchellh/goamz/s3"
+	"github.com/awslabs/aws-sdk-go/aws"
+	"github.com/awslabs/aws-sdk-go/service/s3"
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strconv"
 )
 
-var s3bucket *s3.Bucket = nil
+type S3ProxyError struct {
+	Code    int
+	Message string
+}
 
-func S3Connect() {
-	auth, err := aws.EnvAuth()
+func handleError(e error) *S3ProxyError {
+	err := new(S3ProxyError)
+	if awserr := aws.Error(e); awserr != nil {
+		err.Code = awserr.StatusCode
+		err.Message = awserr.Code + ": " + awserr.Message
+	} else if e != nil {
+		err.Code = 500
+		err.Message = "Server Internal Error"
+	}
+	return err
+}
+
+func S3GetObject(bucket, key, region string) (string, *S3ProxyError) {
+	svc := s3.New(&aws.Config{Region: region})
+	params := &s3.GetObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	}
+
+	resp, err := svc.GetObject(params)
 	if err != nil {
 		LogFatal(err)
+		return "", handleError(err)
 	}
-	LogInfo("Authenticated to AWS")
-	s3client := s3.New(auth, aws.EUWest)
-	s3bucket = s3client.Bucket(os.Getenv("AWS_BUCKET"))
-}
 
-func S3ValidateKey(key string) (map[string]string, error) {
-	if s3bucket == nil {
-		S3Connect()
-	}
-	s3key, err := s3bucket.GetKey(key)
+	data, err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
 	if err != nil {
-		return nil, err
+		LogFatal(err)
+		return "", handleError(err)
 	}
 
-	resp := map[string]string{
-		"Key":          s3key.Key,
-		"Size":         strconv.FormatInt(s3key.Size, 10),
-		"LastModified": s3key.LastModified,
-		"ETag":         s3key.ETag,
-	}
-	return resp, nil
-}
-
-func S3DownloadKey(key string) (string, error) {
-	if s3bucket == nil {
-		S3Connect()
-	}
-	body, err := s3bucket.Get(key)
-	if err != nil {
-		return "", err
-	}
-	filename := filepath.Clean(Options.CacheDir + key)
+	filename := filepath.Clean(Options.CacheDir + bucket + "/" + key)
 	// Create the subdirectories to match the key
 	err = os.MkdirAll(filepath.Dir(filename), 0700)
 	if err != nil {
-		return "", err
+		LogFatal(err)
+		return "", handleError(err)
 	}
-	err = ioutil.WriteFile(filename, body, 0644)
+
+	err = ioutil.WriteFile(filename, data, 0644)
 	if err != nil {
-		return "", err
+		LogFatal(err)
+		return "", handleError(err)
 	}
 	return filename, nil
 }

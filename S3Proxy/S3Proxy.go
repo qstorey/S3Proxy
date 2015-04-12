@@ -16,7 +16,7 @@ func main() {
 	// Run the startup configuration
 	configure()
 	// Connect to S3
-	S3Proxy.S3Connect()
+	//S3Proxy.S3Connect()
 	// Set up the routing
 	mux := S3Proxy.SetUpRoutes()
 	http.Handle("/", mux)
