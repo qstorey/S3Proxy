@@ -19,8 +19,9 @@ func handleError(e error) *S3ProxyError {
 		err.Code = awserr.StatusCode
 		err.Message = awserr.Code + ": " + awserr.Message
 	} else if e != nil {
+		// Not sure how to handle all errors will need to investigate this further.
 		err.Code = 500
-		err.Message = "Server Internal Error"
+		err.Message = e.Error()
 	}
 	return err
 }
@@ -34,14 +35,14 @@ func S3GetObject(bucket, key, region string) (string, *S3ProxyError) {
 
 	resp, err := svc.GetObject(params)
 	if err != nil {
-		LogFatal(err)
+		LogError(err)
 		return "", handleError(err)
 	}
 
 	data, err := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
-		LogFatal(err)
+		LogError(err)
 		return "", handleError(err)
 	}
 
@@ -49,13 +50,13 @@ func S3GetObject(bucket, key, region string) (string, *S3ProxyError) {
 	// Create the subdirectories to match the key
 	err = os.MkdirAll(filepath.Dir(filename), 0700)
 	if err != nil {
-		LogFatal(err)
+		LogError(err)
 		return "", handleError(err)
 	}
 
 	err = ioutil.WriteFile(filename, data, 0644)
 	if err != nil {
-		LogFatal(err)
+		LogError(err)
 		return "", handleError(err)
 	}
 	return filename, nil

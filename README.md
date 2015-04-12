@@ -10,7 +10,7 @@ Using your AWS API credentials, S3Proxy allows you to make unauthenticated HTTP 
 This makes it easy for tools like curl to access private buckets:
 
 ```bash
-curl http://localhost:9090/object/key
+curl http://localhost:9090/bucket/key/path?aws_region=eu-west-1
 ```
 
 > WARNING: It's probably never a good idea to run this on a publicly accessible network/server, but rather private/local networks.
@@ -42,7 +42,6 @@ Pull requests are more than welcome if you would like to contribute back to S3Pr
 ```bash
 export AWS_ACCESS_KEY=<your access key>
 export AWS_SECRET_KEY=<you secret key>
-export AWS_BUCKET=<the bucket you want to access>
 
 ./bin/S3Proxy
 ```
