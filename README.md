@@ -9,8 +9,11 @@ Using your AWS API credentials, S3Proxy allows you to make unauthenticated HTTP 
 
 This makes it easy for tools like curl to access private buckets:
 
+Eg. Assuming you have a S3 bucket named `bucket1` and it has the following 
+structure `folder1/folder2/item.txt`. 
+
 ```bash
-curl http://localhost:9090/bucket/key/path?aws_region=eu-west-1
+curl http://localhost:9090/bucket1/folder1/folder2/item.txt?aws_region=eu-west-1
 ```
 
 > WARNING: It's probably never a good idea to run this on a publicly accessible network/server, but rather private/local networks.
@@ -39,6 +42,30 @@ If you want to make modifications to S3Proxy, clone this repo, ensure that all t
 Pull requests are more than welcome if you would like to contribute back to S3Proxy.
 
 # Usage
+
+It is best to use this with an AWS IAM user with a minimal access policy. See
+the following example policy.
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+                {
+                  "Sid": "Stmt1428853512000",
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:GetObject"
+                  ],
+                  "Resource":
+                    [
+                    "arn:aws:s3:::bucket1/*",
+                    "arn:aws:s3:::bucket2/*"
+                    ]
+                }
+  ]
+}
+```
+
 ```bash
 export AWS_ACCESS_KEY=<your access key>
 export AWS_SECRET_KEY=<you secret key>
