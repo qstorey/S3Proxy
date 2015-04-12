@@ -19,13 +19,24 @@ curl http://localhost:9090/object/key
 
 - [S3Proxy](#s3proxy)
 - [Table of contents](#table-of-contents)
+- [Prerequisites](#Prerequisites)
 - [Development](#development)
 - [Usage](#usage)
 
+# Prerequisites
+
+Setup your development environment, see https://golang.org/doc/code.html.
+
+Running the build script requires the ```go vet``` tool, which obtained as following:
+```bash
+go get golang.org/x/tools/cmd/vet
+```
+
 # Development
 
-Setup your development environment, see https://golang.org/doc/code.html. 
-If you want to contribute to S3Proxy, clone this repo and run the ```make```
+If you want to make modifications to S3Proxy, clone this repo, ensure that all the prerequisites are met, make your changes and run the build script ```make```.
+
+Pull requests are more than welcome if you would like to contribute back to S3Proxy.
 
 # Usage
 ```bash
@@ -33,5 +44,5 @@ export AWS_ACCESS_KEY=<your access key>
 export AWS_SECRET_KEY=<you secret key>
 export AWS_BUCKET=<the bucket you want to access>
 
-$GOPATH/bin/S3Proxy
+./bin/S3Proxy
 ```
