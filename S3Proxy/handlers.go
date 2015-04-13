@@ -20,13 +20,21 @@ func StatusHandler(w http.ResponseWriter, req *http.Request) {
 
 // The default handler used for everything else
 func DefaultHandler(w http.ResponseWriter, req *http.Request) {
-	params := req.URL.Query()
 	parts := strings.SplitN(req.URL.Path[1:], "/", 2)
 	bucket, key := parts[0], parts[1]
-	obj, err := S3GetObject(bucket, key, params.Get("aws_region"))
+
+	aws_region, err := S3GetBucketLocation(bucket)
 	if err != nil {
 		http.Error(w, err.Message, err.Code)
+		return
 	}
+
+	obj, err := S3GetObject(bucket, key, aws_region)
+	if err != nil {
+		http.Error(w, err.Message, err.Code)
+		return
+	}
+
 	http.ServeFile(w, req, obj)
 	return
 }

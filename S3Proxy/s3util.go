@@ -26,6 +26,29 @@ func handleError(e error) *S3ProxyError {
 	return err
 }
 
+func S3GetBucketLocation(bucket string) (string, *S3ProxyError) {
+	// Strange behaviour when hitting s3.amazonaws.com. Some regions work fine
+	// other return AuthorizationMalformedHeader. Specifying a region other than
+	// us-east-1 always works.
+	svc := s3.New(&aws.Config{Region: "eu-west-1"})
+	params := &s3.GetBucketLocationInput{
+		Bucket: aws.String(bucket),
+	}
+	resp, err := svc.GetBucketLocation(params)
+	if err != nil {
+		LogError(err)
+		return "", handleError(err)
+	}
+
+	// API returns the empty response when bucket location is US Standard
+	aws_region := "us-east-1"
+	if resp.LocationConstraint != nil {
+		aws_region = *resp.LocationConstraint
+	}
+
+	return aws_region, nil
+}
+
 func S3GetObject(bucket, key, region string) (string, *S3ProxyError) {
 	svc := s3.New(&aws.Config{Region: region})
 	params := &s3.GetObjectInput{

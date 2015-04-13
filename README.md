@@ -13,7 +13,7 @@ Eg. Assuming you have a S3 bucket named `bucket1` and it has the following
 structure `folder1/folder2/item.txt`. 
 
 ```bash
-curl http://localhost:9090/bucket1/folder1/folder2/item.txt?aws_region=eu-west-1
+curl http://localhost:9090/bucket1/folder1/folder2/item.txt
 ```
 
 > WARNING: It's probably never a good idea to run this on a publicly accessible network/server, but rather private/local networks.
@@ -44,25 +44,22 @@ Pull requests are more than welcome if you would like to contribute back to S3Pr
 # Usage
 
 It is best to use this with an AWS IAM user with a minimal access policy. See
-the following example policy.
+the following example policy. This provides s3 ReadOnly access to all your
+buckets. Just add a Deny statement for each bucket you want to keep private.
 
 ```json
 {
-  "Version": "2012-10-17",
-  "Statement": [
-                {
-                  "Sid": "Stmt1428853512000",
-                  "Effect": "Allow",
-                  "Action": [
-                    "s3:GetObject"
-                  ],
-                  "Resource":
-                    [
-                    "arn:aws:s3:::bucket1/*",
-                    "arn:aws:s3:::bucket2/*"
-                    ]
-                }
-  ]
+"Version": "2012-10-17",
+"Statement": [
+{
+"Effect": "Allow",
+"Action": [
+"s3:Get*",
+"s3:List*"
+],
+"Resource": "*"
+}
+]
 }
 ```
 
