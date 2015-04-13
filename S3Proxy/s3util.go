@@ -41,12 +41,12 @@ func S3GetBucketLocation(bucket string) (string, *S3ProxyError) {
 	}
 
 	// API returns the empty response when bucket location is US Standard
-	aws_region := "us-east-1"
+	awsRegion := "us-east-1"
 	if resp.LocationConstraint != nil {
-		aws_region = *resp.LocationConstraint
+		awsRegion = *resp.LocationConstraint
 	}
 
-	return aws_region, nil
+	return awsRegion, nil
 }
 
 func S3GetObject(bucket, key, region string) (string, *S3ProxyError) {

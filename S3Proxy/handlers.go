@@ -23,13 +23,13 @@ func DefaultHandler(w http.ResponseWriter, req *http.Request) {
 	parts := strings.SplitN(req.URL.Path[1:], "/", 2)
 	bucket, key := parts[0], parts[1]
 
-	aws_region, err := S3GetBucketLocation(bucket)
+	awsRegion, err := S3GetBucketLocation(bucket)
 	if err != nil {
 		http.Error(w, err.Message, err.Code)
 		return
 	}
 
-	obj, err := S3GetObject(bucket, key, aws_region)
+	obj, err := S3GetObject(bucket, key, awsRegion)
 	if err != nil {
 		http.Error(w, err.Message, err.Code)
 		return
