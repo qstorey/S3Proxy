@@ -3,6 +3,7 @@ package S3Proxy
 import (
 	"github.com/drone/routes"
 	"net/http"
+	"strings"
 )
 
 // The index handler
@@ -19,16 +20,21 @@ func StatusHandler(w http.ResponseWriter, req *http.Request) {
 
 // The default handler used for everything else
 func DefaultHandler(w http.ResponseWriter, req *http.Request) {
-	keyMap, err := S3ValidateKey(req.URL.Path[1:])
+	parts := strings.SplitN(req.URL.Path[1:], "/", 2)
+	bucket, key := parts[0], parts[1]
+
+	awsRegion, err := S3GetBucketLocation(bucket)
 	if err != nil {
-		http.Error(w, "404: Not Found", 404)
+		http.Error(w, err.Message, err.Code)
 		return
 	}
-	filename, err := S3DownloadKey(keyMap["Key"])
+
+	obj, err := S3GetObject(bucket, key, awsRegion)
 	if err != nil {
-		http.Error(w, "Server Exception", 500)
+		http.Error(w, err.Message, err.Code)
 		return
 	}
-	http.ServeFile(w, req, filename)
+
+	http.ServeFile(w, req, obj)
 	return
 }
