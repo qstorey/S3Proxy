@@ -45,7 +45,7 @@ func S3GetBucketLocation(bucket string) (string, *S3ProxyError) {
 	if resp.LocationConstraint != nil {
 		awsRegion = *resp.LocationConstraint
 	}
-
+	CacheBucketAdd(bucket, awsRegion)
 	return awsRegion, nil
 }
 
