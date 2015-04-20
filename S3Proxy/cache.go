@@ -31,13 +31,12 @@ func CacheBucketAdd(name string, location string) *s3BucketCacheItem {
 
 func CacheBucketGet(name string) *s3BucketCacheItem {
 	bucket, hit := s3Buckets[name]
-	if !hit {
-		// We didn't get a cache hit
-		return nil
+	if hit {
+		// We need to check that the cache entry hasn't expired
+		if time.Since(bucket.Timestamp) <= bucket.TTL {
+			return bucket
+		}
 	}
-	// We need to check that the cache entry hasn't expired
-	if time.Since(bucket.Timestamp) <= bucket.TTL {
-		return bucket
-	}
+	// We didn't get a cache hit
 	return nil
 }
