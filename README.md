@@ -1,8 +1,5 @@
 # S3Proxy
 
-> WARNING: I created this repo for the intention of learning Go, use with caution.
-
-
 S3Proxy is an http proxy to AWS S3 private buckets written in Go.
 
 Using your AWS API credentials, S3Proxy allows you to make unauthenticated HTTP requests to download objects from your private S3 bucket.
@@ -30,9 +27,10 @@ curl http://localhost:9090/bucket1/folder1/folder2/item.txt
 
 Setup your development environment, see https://golang.org/doc/code.html.
 
-Running the build script requires the ```go vet``` tool, which obtained as following:
+Running the build script requires the ```go vet``` and ```go cover``` tool, which is obtained as follows:
 ```bash
 go get golang.org/x/tools/cmd/vet
+go get golang.org/x/tools/cmd/cover
 ```
 
 # Development
@@ -49,17 +47,17 @@ buckets. Just add a Deny statement for each bucket you want to keep private.
 
 ```json
 {
-"Version": "2012-10-17",
-"Statement": [
-{
-"Effect": "Allow",
-"Action": [
-"s3:Get*",
-"s3:List*"
-],
-"Resource": "*"
-}
-]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:Get*",
+        "s3:List*"
+      ],
+      "Resource": "*"
+    }
+  ]
 }
 ```
 
