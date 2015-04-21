@@ -17,3 +17,6 @@ install: build
 vet:
 	go vet .
 	cd S3Proxy && go vet .
+
+test:
+	cd S3Proxy && go test -cover
