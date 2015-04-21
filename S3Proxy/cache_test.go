@@ -9,7 +9,7 @@ func TestCacheBucketGet(t *testing.T) {
 	//Needed for Options.BucketCacheTTL
 	LoadTestOptions()
 	// Enter a bucket item into the cache
-	CacheBucketAdd("test_add", "eu-west-1")
+	CacheBucketSet("test_add", "eu-west-1")
 	// Retrieve the bucket item from the cache
 	bucket := CacheBucketGet("test_add")
 	// Confirm that the data is valid
@@ -41,7 +41,7 @@ func TestCacheBucketExpire(t *testing.T) {
 	//Needed for Options.BucketCacheTTL
 	LoadTestOptions()
 	// Enter a bucket item into the cache
-	CacheBucketAdd("test_expire", "eu-west-1")
+	CacheBucketSet("test_expire", "eu-west-1")
 	// Sleep long enough for the entry to expire
 	time.Sleep(Options.BucketCacheTTL + time.Second)
 	// Retrieve the bucket item from the cache
