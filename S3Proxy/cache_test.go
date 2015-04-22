@@ -7,7 +7,9 @@ import (
 
 func TestCacheBucketGet(t *testing.T) {
 	//Needed for Options.BucketCacheTTL
-	LoadTestOptions()
+	LoadDefaultOptions()
+	// Lower the TTL for testing purposes
+	Options.BucketCacheTTL = time.Duration(2 * time.Second)
 	// Enter a bucket item into the cache
 	CacheBucketSet("test_add", "eu-west-1")
 	// Retrieve the bucket item from the cache
@@ -39,7 +41,9 @@ func TestCacheBucketGet(t *testing.T) {
 
 func TestCacheBucketExpire(t *testing.T) {
 	//Needed for Options.BucketCacheTTL
-	LoadTestOptions()
+	LoadDefaultOptions()
+	// Lower the TTL for testing purposes
+	Options.BucketCacheTTL = time.Duration(2 * time.Second)
 	// Enter a bucket item into the cache
 	CacheBucketSet("test_expire", "eu-west-1")
 	// Sleep long enough for the entry to expire

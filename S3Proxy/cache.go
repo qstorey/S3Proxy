@@ -1,9 +1,11 @@
 package S3Proxy
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 var s3Buckets = map[string]*s3BucketCacheItem{}
-var s3Objects = map[string]*s3ObjectCacheItem{}
 
 type s3BucketCacheItem struct {
 	Name      string
@@ -13,11 +15,10 @@ type s3BucketCacheItem struct {
 }
 
 func (b s3BucketCacheItem) String() string {
-	return "{Name:" + b.Name +
-		",Location:" + b.Location +
-		",Timestamp:" + b.Timestamp.String() +
-		",TTL:" + (b.TTL - time.Since(b.Timestamp)).String() +
-		"}"
+	tmp := &b
+	tmp.TTL = b.TTL - time.Since(b.Timestamp)
+	out, _ := json.Marshal(tmp)
+	return string(out)
 }
 
 func CacheBucketGet(name string) *s3BucketCacheItem {
@@ -27,6 +28,8 @@ func CacheBucketGet(name string) *s3BucketCacheItem {
 		if time.Since(bucket.Timestamp) <= bucket.TTL {
 			LogInfo("S3 Bucket Cache Hit - " + bucket.String())
 			return bucket
+		} else {
+			delete(s3Buckets, name)
 		}
 	}
 	// We didn't get a cache hit
@@ -34,7 +37,7 @@ func CacheBucketGet(name string) *s3BucketCacheItem {
 	return nil
 }
 
-func CacheBucketSet(name string, location string) *s3BucketCacheItem {
+func CacheBucketSet(name, location string) *s3BucketCacheItem {
 	bucket := new(s3BucketCacheItem)
 	bucket.Name = name
 	bucket.Location = location
@@ -43,11 +46,4 @@ func CacheBucketSet(name string, location string) *s3BucketCacheItem {
 	s3Buckets[name] = bucket
 	LogInfo("S3 Bucket Cache Set - " + bucket.String())
 	return bucket
-}
-
-type s3ObjectCacheItem struct {
-	Bucket    string
-	Key       string
-	Timestamp time.Time
-	TTL       time.Duration
 }
