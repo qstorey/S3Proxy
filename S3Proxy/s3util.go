@@ -27,6 +27,11 @@ func handleError(e error) *S3ProxyError {
 }
 
 func S3GetBucketLocation(bucket string) (string, *S3ProxyError) {
+	// Check if we have the bucket cached
+	bucketCacheItem := CacheBucketGet(bucket)
+	if bucketCacheItem != nil {
+		return bucketCacheItem.Location, nil
+	}
 	// Strange behaviour when hitting s3.amazonaws.com. Some regions work fine
 	// other return AuthorizationMalformedHeader. Specifying a region other than
 	// us-east-1 always works.
@@ -45,7 +50,7 @@ func S3GetBucketLocation(bucket string) (string, *S3ProxyError) {
 	if resp.LocationConstraint != nil {
 		awsRegion = *resp.LocationConstraint
 	}
-
+	CacheBucketSet(bucket, awsRegion)
 	return awsRegion, nil
 }
 
