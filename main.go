@@ -14,5 +14,6 @@ func main() {
 	mux := S3Proxy.SetUpRoutes()
 	http.Handle("/", mux)
 	// Start the HTTP serer
+	S3Proxy.LogInfo("Listening on port: " + S3Proxy.Options.BindAddress)
 	http.ListenAndServe(S3Proxy.Options.BindAddress, nil)
 }

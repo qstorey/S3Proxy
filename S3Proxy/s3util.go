@@ -28,6 +28,7 @@ func handleError(e error) *S3ProxyError {
 	return err
 }
 
+// S3GetBucketLocation returns the AWS region of the S3 Bucket
 func S3GetBucketLocation(bucket string) (string, *S3ProxyError) {
 	// Check if we have the bucket cached
 	bucketCacheItem := CacheBucketGet(bucket)
@@ -56,7 +57,14 @@ func S3GetBucketLocation(bucket string) (string, *S3ProxyError) {
 	return awsRegion, nil
 }
 
+// S3GetObject returns path to the file on disk where the S3 object has been
+// downloaded to
 func S3GetObject(bucket, key, region string) (string, *S3ProxyError) {
+	// Check if the item
+	objectCacheItem := CacheObjectGet(key)
+	if objectCacheItem != nil {
+		return objectCacheItem.FilePath, nil
+	}
 	svc := s3.New(&aws.Config{Region: region})
 	params := &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
@@ -89,5 +97,6 @@ func S3GetObject(bucket, key, region string) (string, *S3ProxyError) {
 		LogError(err)
 		return "", handleError(err)
 	}
+	CacheObjectSet(key, bucket, filename)
 	return filename, nil
 }
