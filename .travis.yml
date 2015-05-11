@@ -1,0 +1,9 @@
+language: go
+
+go:
+  - tip
+
+install:
+  - go get -v
+
+script: make test

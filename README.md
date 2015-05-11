@@ -1,4 +1,4 @@
-# S3Proxy
+# S3Proxy [![Build Status](https://travis-ci.org/qstorey/S3Proxy.svg?branch=master)](https://travis-ci.org/qstorey/S3Proxy)
 
 S3Proxy is an http proxy to AWS S3 private buckets written in Go.
 
@@ -6,8 +6,8 @@ Using your AWS API credentials, S3Proxy allows you to make unauthenticated HTTP 
 
 This makes it easy for tools like curl to access private buckets:
 
-Eg. Assuming you have a S3 bucket named `bucket1` and it has the following 
-structure `folder1/folder2/item.txt`. 
+Eg. Assuming you have a S3 bucket named `bucket1` and it has the following
+structure `folder1/folder2/item.txt`.
 
 ```bash
 curl http://localhost:9090/bucket1/folder1/folder2/item.txt
