@@ -11,4 +11,4 @@ script: make test
 notification:
   slack:
     rooms:
-      secure: FjlsKdkPvj50GGzejzcmS6d6JDasz7rQT3uPGP8icMhBIw5a4VfH925Is1APltWM2kanbiecfqEiCwLP9y83Hvk9F5wCvhvkaLJtCKs07aofdlN+oK60bvC6f7VUIKpGKwGKC3XTyZ6jOFiClLXiEixgbrlxb1Cj7eLm+j60Bok=
+      secure: otuIMaw6i8w9n4s7UVczgEYL4oeLdSOMZycjxWyaBzTWQnNkbqOrTz6zYjMPZWeP2HCc99xbVf3t0psaUbZxXOl3AbS0XI06rZiqJI3tVhAWZR5p/+GBjXxboSnOCtzBCPhhCqWQeV3SqIX712ga6wquB0k/evb8y7SXLou+euo=
