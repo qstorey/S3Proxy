@@ -7,6 +7,8 @@ func SetUpRoutes() *routes.RouteMux {
 	mux := routes.New()
 	// Route: Index
 	mux.Get("/", IndexHandler)
+	// Route: Favicon
+	mux.Get("/favicon.ico", FaviconHandler)
 	// Route: Status
 	mux.Get("/_status", StatusHandler)
 	// Route: Default

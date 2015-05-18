@@ -13,6 +13,11 @@ func IndexHandler(w http.ResponseWriter, req *http.Request) {
 	return
 }
 
+// FaviconHandler
+func FaviconHandler(w http.ResponseWriter, req *http.Request) {
+	http.Error(w, "", 404)
+}
+
 // The status handler for determining the status of the server
 func StatusHandler(w http.ResponseWriter, req *http.Request) {
 	panic("Not Implemented")
