@@ -1,9 +1,13 @@
 language: go
 
 go:
-  - tip
+  - 1.4.2
 
 install:
   - go get -v
 
 script: make test
+
+notification:
+  slack:
+    secure: S5wu97HkGqV+byE9fSGOaAL8lidkV2vECLpaumQCD+T4f9AkN3x3Cv6Hcv9KfcbPV7lxM5gwDA8NipjDvd5vK46yVYaO1XoZg04zxGUCK01MjGUagUSXyMhWFd9RuWPQ7iGG5hvjtJPI+q7lkTbRYs4quk5I2GsL9TrRKYpgKbY=
