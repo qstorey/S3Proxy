@@ -1,11 +1,13 @@
 package S3Proxy
 
 import (
-	"github.com/awslabs/aws-sdk-go/aws"
-	"github.com/awslabs/aws-sdk-go/service/s3"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/awslabs/aws-sdk-go/aws"
+	"github.com/awslabs/aws-sdk-go/aws/awserr"
+	"github.com/awslabs/aws-sdk-go/service/s3"
 )
 
 type S3ProxyError struct {
@@ -15,9 +17,9 @@ type S3ProxyError struct {
 
 func handleError(e error) *S3ProxyError {
 	err := new(S3ProxyError)
-	if awserr := aws.Error(e); awserr != nil {
-		err.Code = awserr.StatusCode
-		err.Message = awserr.Code + ": " + awserr.Message
+	if awsErr, ok := e.(awserr.RequestFailure); ok {
+		err.Code = awsErr.StatusCode()
+		err.Message = awsErr.Code() + ": " + awsErr.Message()
 	} else if e != nil {
 		// Not sure how to handle all errors will need to investigate this further.
 		err.Code = 500
