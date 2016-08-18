@@ -5,9 +5,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/awslabs/aws-sdk-go/aws"
-	"github.com/awslabs/aws-sdk-go/aws/awserr"
-	"github.com/awslabs/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 )
 
 type S3ProxyError struct {
@@ -38,7 +39,7 @@ func S3GetBucketLocation(bucket string) (string, *S3ProxyError) {
 	// Strange behaviour when hitting s3.amazonaws.com. Some regions work fine
 	// other return AuthorizationMalformedHeader. Specifying a region other than
 	// us-east-1 always works.
-	svc := s3.New(&aws.Config{Region: "eu-west-1"})
+	svc := s3.New(session.New(&aws.Config{Region: aws.String("eu-west-1")}))
 	params := &s3.GetBucketLocationInput{
 		Bucket: aws.String(bucket),
 	}
@@ -65,7 +66,7 @@ func S3GetObject(bucket, key, region string) (string, *S3ProxyError) {
 	if objectCacheItem != nil {
 		return objectCacheItem.FilePath, nil
 	}
-	svc := s3.New(&aws.Config{Region: region})
+	svc := s3.New(session.New(&aws.Config{Region: aws.String(region)}))
 	params := &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
