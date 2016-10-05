@@ -1,17 +1,26 @@
 package S3Proxy
 
 import (
+	"sync"
 	"testing"
 	"time"
 )
 
 func TestCacheBucketGet(t *testing.T) {
+	var wg sync.WaitGroup
+	wg.Add(1)
 	//Needed for Options.BucketCacheTTL
 	LoadDefaultOptions()
 	// Lower the TTL for testing purposes
 	Options.BucketCacheTTL = time.Duration(2 * time.Second)
 	// Enter a bucket item into the cache
 	CacheBucketSet("bucket_test_add", "eu-west-1")
+	go func() {
+		for i := 0; i < 10; i++ {
+			CacheBucketSet("bucket_test_add", "eu-west-1")
+		}
+		wg.Done()
+	}()
 	// Retrieve the bucket item from the cache
 	bucket := CacheBucketGet("bucket_test_add")
 	// Confirm that the data is valid
@@ -37,6 +46,7 @@ func TestCacheBucketGet(t *testing.T) {
 			"Got", nil,
 		)
 	}
+	wg.Wait()
 }
 
 func TestCacheBucketExpire(t *testing.T) {
@@ -62,12 +72,20 @@ func TestCacheBucketExpire(t *testing.T) {
 }
 
 func TestCacheObjectGet(t *testing.T) {
+	var wg sync.WaitGroup
+	wg.Add(1)
 	// Needed for Options.ObjectCacheTTL
 	LoadDefaultOptions()
 	// Lower the TTL for testing purposes
 	Options.ObjectCacheTTL = time.Duration(2 * time.Second)
 	// Enter an Object item into the cache
 	CacheObjectSet("object_test_add", "bucket", "/file/path")
+	go func() {
+		for i := 0; i < 10; i++ {
+			CacheObjectSet("object_test_add", "bucket", "/file/path")
+		}
+		wg.Done()
+	}()
 	// Retrieve the object item from the cache
 	object := CacheObjectGet("object_test_add")
 	if object != nil {
@@ -99,6 +117,7 @@ func TestCacheObjectGet(t *testing.T) {
 			"Got", nil,
 		)
 	}
+	wg.Wait()
 }
 
 func TestCacheObjectExpire(t *testing.T) {
