@@ -2,9 +2,12 @@ package S3Proxy
 
 import (
 	"encoding/json"
+	"sync"
 	"time"
 )
 
+var mutexB = sync.Mutex{}
+var mutexO = sync.Mutex{}
 var s3Buckets = map[string]*S3BucketCacheItem{}
 var s3Objects = map[string]*S3ObjectCacheItem{}
 
@@ -54,6 +57,8 @@ func (o S3ObjectCacheItem) String() string {
 
 // CacheBucketGet checks if the bucket information is in the local cache
 func CacheBucketGet(name string) *S3BucketCacheItem {
+	mutexB.Lock()
+	defer mutexB.Unlock()
 	bucket, hit := s3Buckets[name]
 	if hit {
 		// We need to check that the cache entry hasn't expired
@@ -76,6 +81,8 @@ func CacheBucketSet(name, location string) *S3BucketCacheItem {
 		Name:      name,
 		Location:  location,
 	}
+	mutexB.Lock()
+	defer mutexB.Unlock()
 	s3Buckets[name] = &bucket
 	LogInfo("S3 Bucket Cache Set - " + bucket.String())
 	return &bucket
@@ -83,6 +90,8 @@ func CacheBucketSet(name, location string) *S3BucketCacheItem {
 
 // CacheObjectGet checks if the S3Object information is in the local cache
 func CacheObjectGet(key string) *S3ObjectCacheItem {
+	mutexO.Lock()
+	defer mutexO.Unlock()
 	object, hit := s3Objects[key]
 	if hit {
 		if time.Since(object.CacheItem.Timestamp) <= object.CacheItem.TTL {
@@ -104,6 +113,8 @@ func CacheObjectSet(key, bucket, filepath string) *S3ObjectCacheItem {
 		Bucket:    bucket,
 		FilePath:  filepath,
 	}
+	mutexO.Lock()
+	defer mutexO.Unlock()
 	s3Objects[key] = &object
 	LogInfo("S3 Object Cache Set - " + object.String())
 	return &object
